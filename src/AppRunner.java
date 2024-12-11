@@ -70,7 +70,7 @@ public class AppRunner {
                 }
             }
         } catch (IllegalArgumentException e) {
-            print("Недопустимая буква. Попрбуйте еще раз.");
+            print("Недопустимая буква. Попробуйте еще раз.");
             chooseAction(products);
         }
 
