@@ -9,7 +9,11 @@ public class AppRunner {
 
     private final UniversalArray<Product> products = new UniversalArrayImpl<>();
 
-    private final CoinAcceptor coinAcceptor;
+    private CoinAcceptor coinAcceptor;
+
+    private PaymentMethod paymentMethod;
+
+    private String chosePayMethod;
 
     private static boolean isExit = false;
 
@@ -22,8 +26,42 @@ public class AppRunner {
                 new Mars(ActionLetter.F, 80),
                 new Pistachios(ActionLetter.G, 130)
         });
-        coinAcceptor = new CoinAcceptor(100);
     }
+
+    private void getPaymentMethod() {
+        if (chosePayMethod.equalsIgnoreCase("n")) {
+            coinAcceptor = new CashAcceptor(200);
+        } else if (chosePayMethod.equalsIgnoreCase("m")) {
+            coinAcceptor = new CoinAcceptor(100);
+        }
+    }
+
+    private void choosePayMethod() {
+        print("Выберите способ оплаты");
+        String action;
+        while (true) {
+            print(" n - оплата купюрами");
+            print(" m - оплата монетами");
+            print(" h - выйти");
+            action = fromConsole().substring(0, 1).toLowerCase();
+            if (action.equalsIgnoreCase("n") || action.equalsIgnoreCase("m") || action.equalsIgnoreCase("h")) {
+                if (action.equalsIgnoreCase("h")) {
+                    isExit = true;
+                    break;
+                }
+                break;
+            }
+        }
+        switch (action) {
+            case "n":
+                chosePayMethod = "n";
+                break;
+            case "m":
+                chosePayMethod = "m";
+                break;
+        }
+    }
+
 
     public static void run() {
         AppRunner app = new AppRunner();
@@ -35,8 +73,18 @@ public class AppRunner {
     private void startSimulation() {
         print("В автомате доступны:");
         showProducts(products);
-
-        print("Монет на сумму: " + coinAcceptor.getAmount());
+        choosePayMethod();
+        getPaymentMethod();
+        switch (chosePayMethod) {
+            case "n":
+                print("Денег на сумму: " + coinAcceptor.getAmount());
+                break;
+            case "m":
+                print("Монет на сумму: " + coinAcceptor.getAmount());
+                break;
+            case "h":
+                return;
+        }
 
         UniversalArray<Product> allowProducts = new UniversalArrayImpl<>();
         allowProducts.addAll(getAllowedProducts().toArray());
