@@ -33,6 +33,8 @@ public class AppRunner {
             coinAcceptor = new CashAcceptor(200);
         } else if (chosePayMethod.equalsIgnoreCase("m")) {
             coinAcceptor = new CoinAcceptor(100);
+        } else if (chosePayMethod.equalsIgnoreCase("h")) {
+            isExit = true;
         }
     }
 
@@ -66,7 +68,12 @@ public class AppRunner {
     public static void run() {
         AppRunner app = new AppRunner();
         while (!isExit) {
-            app.startSimulation();
+            try {
+                app.startSimulation();
+            } catch (NullPointerException npe) {
+                break;
+            }
+
         }
     }
 
@@ -86,10 +93,19 @@ public class AppRunner {
                 return;
         }
 
+        try {
+            getProducts();
+        } catch (NullPointerException npe) {
+            System.out.println("Программа завершена");
+        }
+
+
+    }
+
+    private void getProducts() {
         UniversalArray<Product> allowProducts = new UniversalArrayImpl<>();
         allowProducts.addAll(getAllowedProducts().toArray());
         chooseAction(allowProducts);
-
     }
 
     private UniversalArray<Product> getAllowedProducts() {
