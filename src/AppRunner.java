@@ -15,6 +15,8 @@ public class AppRunner {
 
     private static String chosePayMethod;
 
+    private static int minValue;
+
     private static boolean isExit = false;
 
     private AppRunner() {
@@ -31,8 +33,10 @@ public class AppRunner {
     private static void getPaymentMethod() {
         if (chosePayMethod.equalsIgnoreCase("n")) {
             coinAcceptor = new CashAcceptor(200);
+            minValue = 20;
         } else if (chosePayMethod.equalsIgnoreCase("m")) {
             coinAcceptor = new CoinAcceptor(100);
+            minValue = 10;
         }
     }
 
@@ -109,8 +113,8 @@ public class AppRunner {
         print(" h - Выйти");
         String action = fromConsole().substring(0, 1);
         if ("a".equalsIgnoreCase(action)) {
-            coinAcceptor.setAmount(coinAcceptor.getAmount() + 10);
-            print("Вы пополнили баланс на 10");
+            coinAcceptor.setAmount(coinAcceptor.getAmount() + minValue);
+            print("Вы пополнили баланс на " + minValue);
             return;
         }
         try {
