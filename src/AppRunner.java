@@ -9,11 +9,11 @@ public class AppRunner {
 
     private final UniversalArray<Product> products = new UniversalArrayImpl<>();
 
-    private CoinAcceptor coinAcceptor;
+    private static CoinAcceptor coinAcceptor;
 
     private PaymentMethod paymentMethod;
 
-    private String chosePayMethod;
+    private static String chosePayMethod;
 
     private static boolean isExit = false;
 
@@ -28,7 +28,7 @@ public class AppRunner {
         });
     }
 
-    private void getPaymentMethod() {
+    private static void getPaymentMethod() {
         if (chosePayMethod.equalsIgnoreCase("n")) {
             coinAcceptor = new CashAcceptor(200);
         } else if (chosePayMethod.equalsIgnoreCase("m")) {
@@ -38,7 +38,7 @@ public class AppRunner {
         }
     }
 
-    private void choosePayMethod() {
+    private static void choosePayMethod() {
         print("Выберите способ оплаты");
         String action;
         while (true) {
@@ -67,12 +67,14 @@ public class AppRunner {
 
     public static void run() {
         AppRunner app = new AppRunner();
+        choosePayMethod();
+        try {
+            getPaymentMethod();
+        } catch (NullPointerException npe) {
+            return;
+        }
         while (!isExit) {
-            try {
-                app.startSimulation();
-            } catch (NullPointerException npe) {
-                break;
-            }
+            app.startSimulation();
 
         }
     }
@@ -80,8 +82,7 @@ public class AppRunner {
     private void startSimulation() {
         print("В автомате доступны:");
         showProducts(products);
-        choosePayMethod();
-        getPaymentMethod();
+
         switch (chosePayMethod) {
             case "n":
                 print("Денег на сумму: " + coinAcceptor.getAmount());
@@ -93,13 +94,7 @@ public class AppRunner {
                 return;
         }
 
-        try {
-            getProducts();
-        } catch (NullPointerException npe) {
-            System.out.println("Программа завершена");
-        }
-
-
+        getProducts();
     }
 
     private void getProducts() {
@@ -147,7 +142,7 @@ public class AppRunner {
         }
     }
 
-    private String fromConsole() {
+    private static String fromConsole() {
         return new Scanner(System.in).nextLine();
     }
 
@@ -157,7 +152,7 @@ public class AppRunner {
         }
     }
 
-    private void print(String msg) {
+    private static void print(String msg) {
         System.out.println(msg);
     }
 }
